@@ -35,6 +35,15 @@ jobs:
           uv python install
           uv sync
 
+      - name: Set target date
+        id: date
+        run: |
+          if [ -n "${{ github.event.inputs.date }}" ]; then
+            echo "target=${{ github.event.inputs.date }}" >> $GITHUB_OUTPUT
+          else
+            echo "target=$(date -d 'yesterday' +%Y-%m-%d)" >> $GITHUB_OUTPUT
+          fi
+
       - name: Run arXiv selector
         env:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
@@ -49,10 +58,9 @@ jobs:
             uv run python src/main.py
           fi
 
-      - name: Clean old files (保留最近 60 天)
+      - name: Clean old markdown files (保留最近 30 天)
         run: |
-          find output/ -name "*.md" -mtime +60 -delete 2>/dev/null || true
-          find output/ -name "*.json" -mtime +60 -delete 2>/dev/null || true
+          find output/ -name "*.md" -mtime +30 -delete 2>/dev/null || true
 
       - name: Commit and push results
         run: |
@@ -62,9 +70,9 @@ jobs:
           # 取得今天的日期
           DATE=$(date +%Y-%m-%d)
 
-          # Add 生成的檔案與刪除的檔案
-          git add output/*.md output/*.json 2>/dev/null || true
-          git add -u output/ 2>/dev/null || true
+          # 只 commit .md 檔案（stats.json 只保留在 Artifacts）
+          git add output/*.md 2>/dev/null || true
+          git add -u output/*.md 2>/dev/null || true
 
           # Commit (如果有變更)
           if git diff --staged --quiet; then
@@ -74,10 +82,10 @@ jobs:
             git push
           fi
 
-      - name: Upload artifacts (備用)
+      - name: Upload stats to artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: arxiv-reports
-          path: output/
+          name: token-stats-${{ steps.date.outputs.target }}
+          path: output/arxiv-${{ steps.date.outputs.target }}-stats.json
           retention-days: 30
