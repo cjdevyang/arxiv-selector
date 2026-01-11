@@ -26,7 +26,6 @@ jobs:
 
       - name: Setup Python and install dependencies
         run: |
-          cd arxiv-selector
           uv python install
           uv sync
 
