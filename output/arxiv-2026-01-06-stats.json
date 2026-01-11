@@ -1,0 +1,27 @@
+{
+  "date": "2026-01-06",
+  "timestamp": "2026-01-11T14:51:32.807272",
+  "model": "gemini-2.5-flash",
+  "paper_count": 322,
+  "selected_count": 10,
+  "token_usage": {
+    "input_tokens": 108910,
+    "output_tokens": 525,
+    "thinking_tokens": 0,
+    "total_tokens": 109435
+  },
+  "token_usage_breakdown": {
+    "batch_api": {
+      "input_tokens": 89272,
+      "output_tokens": 301,
+      "thinking_tokens": 0,
+      "total_tokens": 89573
+    },
+    "sync_api": {
+      "input_tokens": 19638,
+      "output_tokens": 224,
+      "thinking_tokens": 0,
+      "total_tokens": 19862
+    }
+  }
+}
