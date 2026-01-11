@@ -219,11 +219,12 @@ def evaluate_papers(
             "response_mime_type": "application/json",
         }
 
-        # 如果有設定 thinking budget，加入 thinking config
-        if LLM_THINKING_BUDGET > 0:
-            config_params["thinking_config"] = types.ThinkingConfig(
-                thinking_budget=LLM_THINKING_BUDGET
-            )
+        # 設定 thinking config（Gemini 2.5 預設會開啟 thinking，需明確設定）
+        # LLM_THINKING_BUDGET = 0 表示關閉 thinking
+        # LLM_THINKING_BUDGET > 0 表示開啟並設定 budget
+        config_params["thinking_config"] = types.ThinkingConfig(
+            thinking_budget=LLM_THINKING_BUDGET
+        )
 
         response = client.models.generate_content(
             model=LLM_MODEL,
@@ -408,14 +409,12 @@ def _build_batch_request(papers: list[Paper], top_n: int) -> dict:
         'config': {
             'temperature': LLM_TEMPERATURE,
             'response_mime_type': 'application/json',
+        # 明確設定 thinking config（Gemini 2.5 預設會開啟 thinking）
+        'thinking_config': {
+            'thinking_budget': LLM_THINKING_BUDGET
+            }
         }
     }
-
-    # 如果有設定 thinking budget，加入 thinking config
-    if LLM_THINKING_BUDGET > 0:
-        request['config']['thinking_config'] = {
-            'thinking_budget': LLM_THINKING_BUDGET
-        }
 
     return request
 

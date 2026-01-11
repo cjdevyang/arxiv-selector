@@ -49,6 +49,11 @@ jobs:
             uv run python src/main.py
           fi
 
+      - name: Clean old files (保留最近 60 天)
+        run: |
+          find output/ -name "*.md" -mtime +60 -delete 2>/dev/null || true
+          find output/ -name "*.json" -mtime +60 -delete 2>/dev/null || true
+
       - name: Commit and push results
         run: |
           git config user.name "GitHub Actions Bot"
@@ -57,8 +62,9 @@ jobs:
           # 取得今天的日期
           DATE=$(date +%Y-%m-%d)
 
-          # Add 生成的檔案
+          # Add 生成的檔案與刪除的檔案
           git add output/*.md output/*.json 2>/dev/null || true
+          git add -u output/ 2>/dev/null || true
 
           # Commit (如果有變更)
           if git diff --staged --quiet; then
