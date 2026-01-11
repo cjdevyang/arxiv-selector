@@ -8,6 +8,11 @@ on:
 
   # 允許手動觸發
   workflow_dispatch:
+    inputs:
+      date:
+        description: '查詢日期 (YYYY-MM-DD)，留空則查詢前一天'
+        required: false
+        type: string
 
 jobs:
   select-papers:
@@ -38,7 +43,11 @@ jobs:
           LLM_MODEL: gemini-2.5-flash
           LLM_THINKING_BUDGET: 0
         run: |
-          uv run python src/main.py
+          if [ -n "${{ github.event.inputs.date }}" ]; then
+            uv run python src/main.py --date "${{ github.event.inputs.date }}"
+          else
+            uv run python src/main.py
+          fi
 
       - name: Commit and push results
         run: |
