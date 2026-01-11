@@ -37,7 +37,6 @@ jobs:
           LLM_MODEL: gemini-2.5-flash
           LLM_THINKING_BUDGET: 0
         run: |
-          cd arxiv-selector
           uv run python src/main.py
 
       - name: Commit and push results
@@ -49,7 +48,7 @@ jobs:
           DATE=$(date +%Y-%m-%d)
 
           # Add 生成的檔案
-          git add arxiv-selector/output/*.md arxiv-selector/output/*.json 2>/dev/null || true
+          git add output/*.md output/*.json 2>/dev/null || true
 
           # Commit (如果有變更)
           if git diff --staged --quiet; then
@@ -64,5 +63,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: arxiv-reports
-          path: arxiv-selector/output/
+          path: output/
           retention-days: 30
