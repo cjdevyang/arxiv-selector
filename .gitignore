@@ -37,6 +37,5 @@ wheels/
 .DS_Store
 Thumbs.db
 
-# Output - 保留 output 目錄但不追蹤內容（GitHub Actions 會自動 commit）
-# 如果想在 git 中追蹤報告，請註解掉下面這行
-# output/
+# Output - 只追蹤 .md 報告，stats.json 只保留在 GitHub Artifacts
+output/*-stats.json
