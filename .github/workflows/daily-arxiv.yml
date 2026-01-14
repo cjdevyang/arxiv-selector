@@ -2,9 +2,10 @@ name: Daily arXiv Paper Selector
 
 on:
   schedule:
-    # 週二到週六 UTC 01:00 執行 (台灣時間 09:00)
+    # 週二到週六 UTC 03:00 執行 (台灣時間 11:00)
     # 排除週一，因為週日 arXiv 沒有新論文
-    - cron: '0 1 * * 2-6'
+    # 延後到 UTC 03:00 是因為 arXiv API 在 UTC 00:00-02:00 期間索引可能尚未完成
+    - cron: '0 3 * * 2-6'
 
   # 允許手動觸發
   workflow_dispatch:
